@@ -1,0 +1,29 @@
+{
+  "name": "desafio_contagem_palavras",
+  "version": "1.0.0",
+  "description": "Contagem das 20 palavras mais frequentes em arquivos .txt de até 1 bilhão de linhas, com medição de tempo e memória.",
+  "private": true,
+  "type": "module",
+  "main": "dist/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "dev": "tsx src/cli.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrohassen/desafio_contagem_palavras.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pedrohassen/desafio_contagem_palavras/issues"
+  },
+  "homepage": "https://github.com/pedrohassen/desafio_contagem_palavras#readme",
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
