@@ -1,3 +1,4 @@
+import { appendFileSync } from "node:fs";
 import { StreamingFileWordReader } from "./reader/StreamingFileWordReader.js";
 import { InMemoryWordCounter } from "./counter/InMemoryWordCounter.js";
 import { MinHeapTopKSelector } from "./topK/MinHeapTopKSelector.js";
@@ -6,6 +7,7 @@ import { PeriodicMemorySampler } from "./memory/PeriodicMemorySampler.js";
 import type { MemoryUsageSummary } from "./memory/MemorySampler.js";
 
 const TOP_WORDS_COUNT = 20;
+const MEMORY_LOG_FILE_PATH = "memoria.log";
 const reporter = new ConsoleReporter();
 
 async function processFile(filePath: string): Promise<void> {
@@ -25,14 +27,13 @@ async function processFile(filePath: string): Promise<void> {
   const memoryUsageSummary = memorySampler.stop();
 
   reporter.report(filePath, elapsedMs, topWords);
-  logMemoryUsageToStderr(memoryUsageSummary);
+  logMemoryUsageToFile(filePath, memoryUsageSummary);
 }
 
-function logMemoryUsageToStderr(summary: MemoryUsageSummary): void {
+function logMemoryUsageToFile(filePath: string, summary: MemoryUsageSummary): void {
   const toMebibytes = (bytes: number) => (bytes / (1024 * 1024)).toFixed(1);
-  console.error(
-    `[memoria] pico RSS: ${toMebibytes(summary.peakRssBytes)} MB, pico heap usado: ${toMebibytes(summary.peakHeapUsedBytes)} MB`
-  );
+  const logLine = `${new Date().toISOString()} | ${filePath} | pico RSS: ${toMebibytes(summary.peakRssBytes)} MB | pico heap usado: ${toMebibytes(summary.peakHeapUsedBytes)} MB\n`;
+  appendFileSync(MEMORY_LOG_FILE_PATH, logLine);
 }
 
 const filePaths = process.argv.slice(2);
