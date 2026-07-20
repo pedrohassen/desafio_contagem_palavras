@@ -15,7 +15,17 @@ O problema tem uma restrição central: os arquivos de entrada podem ter até 1 
 
 Os módulos dependem de interfaces (`WordReader`, `WordCounter`, `TopKSelector`, `Reporter`, `MemorySampler`), não de implementações concretas — trocar a estratégia de qualquer etapa (por exemplo, o algoritmo de seleção do top-K) não exige alterar o restante do pipeline.
 
-A saída oficial (formato exigido pelo desafio) vai para o `stdout`. As informações de memória — que não fazem parte do formato de saída pedido — vão para o `stderr`, para não contaminar a saída caso ela seja validada automaticamente.
+A saída oficial (formato exigido pelo desafio) vai para o `stdout`. As informações de memória — que não fazem parte do formato de saída pedido — vão para o `stderr`, um canal separado, para não contaminar a saída caso ela seja validada automaticamente (por exemplo, redirecionada para um arquivo ou comparada por texto).
+
+**Importante:** rodando direto no terminal, as duas saídas aparecem misturadas na tela, porque o terminal exibe `stdout` e `stderr` juntos por padrão. Isso é só uma questão de exibição — a linha `[memoria] ...` não faz parte do que o programa efetivamente emite como resultado (`stdout`). Pra ver só a saída oficial, descarte o `stderr`:
+
+```bash
+# Linux/macOS
+npm start -- arquivo.txt 2>/dev/null
+
+# PowerShell
+npm run dev -- arquivo.txt 2>$null
+```
 
 ## Como executar localmente
 
@@ -57,3 +67,4 @@ Medido em: Intel Core i5-8400 @ 2.80GHz, 16GB RAM, Windows 10 Pro, Node.js v22.2
 
 - O desafio descreve arquivos de até 1.000.000.000 de linhas, mas o material disponibilizado para teste vai até 100.000.000 linhas (~796MB) — o arquivo de 1 bilhão não foi disponibilizado.
 - Comparação de palavra é feita byte a byte (case sensitive, sem normalização), conforme exigido — a única transformação aplicada é a remoção do BOM UTF-8 no início do arquivo, quando presente, e de um eventual `\r` residual antes da quebra de linha (arquivos com terminação de linha estilo Windows).
+- A linha de diagnóstico de memória (`[memoria] ...`) sempre aparece junto na tela quando o CLI é executado direto num terminal — isso é comportamento normal de `stdout`/`stderr` combinados na exibição, não uma violação do formato de saída exigido pelo desafio. Ver a seção "Como executar localmente" para isolar a saída oficial.
